@@ -1,14 +1,8 @@
 const fs = require('fs');
-
-
 const ytdl = require('ytdl-core');
-
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
-
-//const ffmpeg = require('ffmpeg');
-// const ffmpeg = require('ffmpeg-fork');
-var ffprobe = require('ffprobe'),
+const ffprobe = require('ffprobe'),
     ffprobeStatic = require('ffprobe-static');
 const BigNumber = require('bignumber.js');
 
@@ -20,15 +14,6 @@ async function download(videoid, filepath) {
     console.log('videourl',videourl);
     console.log('filepath',filepath);
     let length = 0;
-
-    // ytdl(videourl)
-    // .pipe(fs.createWriteStream(filepath))
-    // .on("finish", () => {
-    //     console.log("\nFinished!");
-    //     return;
-    //     // rl.close();
-    //     // process.exit();
-    // });
 
     const prom = new Promise(function (resolve) {
         let video = ytdl(videourl, { filter: format => format.container === 'mp4' });
@@ -60,22 +45,18 @@ async function download(videoid, filepath) {
       });
 
     return prom
-
 }
 
 async function extractFrame(videofile, username, frameno, index) {
     console.log('extractFrame', videofile, frameno)
     let command = `ffmpeg -i ${videofile} -vf "select=eq(n\\,${frameno})" -vframes 1 ./assets/${username}-${index}.png`
-
-      try {
+    try {
         const { stdout, stderr } = await exec(command);
-        // console.log('stdout:', stdout);
-        // console.log('stderr:', stderr);
-      } catch (e) {
+            // console.log('stdout:', stdout);
+            // console.log('stderr:', stderr);
+        } catch (e) {
         console.error(e); 
-      }
-
-    console.log('...done');
+    }
 }
 
 async function getVideoInfo(videofile) {
@@ -109,7 +90,7 @@ async function createVideoWallImage(videoid, account) {
     const username = account.substring(0,10);
     const videofile = `./assets/${username}.mp4`;
     console.log('createVideoWallImage:',videoid, videofile);
-    // await download(videoid, filepath);
+    await download(videoid, filepath);
     const { nframes, duration } = await getVideoInfo(videofile);
     console.log('nframes:', nframes);
     console.log('duration:', duration);
@@ -121,10 +102,7 @@ async function createVideoWallImage(videoid, account) {
     for (let i = 0; i < NUM_CAPTURE_FRAMES; i++) {
         await extractFrame(videofile,username,frames[i], i);
     }
-
-
     // let imagefile = await compositeFrames(username)
     // return imagefile;
-
 }
 module.exports = createVideoWallImage;
