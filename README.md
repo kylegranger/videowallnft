@@ -1,5 +1,7 @@
 # Video Wall NFT
 
+-- WORK IN PROGRESS --
+
 This node app demonstrates the minting of NFTs on the Polygon test network, Mumbai.
 
 Given a YouTube video url, e.g. the James Bond trailer for No Time To Die, https://www.youtube.com/watch?v=BIhNsAtPbPI, the app extracts nine frames from the video. The frames chosen are deterministically based on the account number.  
