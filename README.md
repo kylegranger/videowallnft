@@ -6,7 +6,7 @@ This node app demonstrates the minting of NFTs on the Polygon test network, Mumb
 
 Given a YouTube video url, e.g. the James Bond trailer for No Time To Die, https://www.youtube.com/watch?v=BIhNsAtPbPI, the app extracts nine frames from the video. The frames chosen are deterministically based on the account number.  
 
-Starting with the most significant byte in the account number for each image, I use the first three bytes to determine the position of the first frame.  The 24-bit number gets normalized to 0..1, and then the frame number is derived based on that value and the total number of frames. We shift to the right by 2 bytes for the next frame and repeat the process.  As an example, nine frame number are shown here, using the account number below and a video duration of 3720 frames.
+Starting with the most significant byte in the account number for each image, I use the first three bytes to determine the position of the first frame.  The 24-bit number gets normalized to 0..1, and then the frame number is derived based on that value and the total number of frames. We shift to the right by 2 bytes for the next frame and repeat the process.  As an example, nine frame numbers are shown here, using the account number below and a video duration of 3720 frames.
 ```
 nframes: 3720
 duration: 155.155000
