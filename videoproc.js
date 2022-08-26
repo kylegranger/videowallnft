@@ -90,7 +90,7 @@ async function createVideoWallImage(videoid, account) {
     const username = account.substring(0,10);
     const videofile = `./assets/${username}.mp4`;
     console.log('createVideoWallImage:',videoid, videofile);
-    await download(videoid, filepath);
+    await download(videoid, videofile);
     const { nframes, duration } = await getVideoInfo(videofile);
     console.log('nframes:', nframes);
     console.log('duration:', duration);
