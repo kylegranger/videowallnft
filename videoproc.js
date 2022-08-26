@@ -1,6 +1,13 @@
 const fs = require('fs');
+
+
 const ytdl = require('ytdl-core');
-const ffmpeg = require('ffmpeg');
+
+const util = require('util');
+const exec = util.promisify(require('child_process').exec);
+
+//const ffmpeg = require('ffmpeg');
+// const ffmpeg = require('ffmpeg-fork');
 var ffprobe = require('ffprobe'),
     ffprobeStatic = require('ffprobe-static');
 const BigNumber = require('bignumber.js');
@@ -64,6 +71,21 @@ async function download(videoid, username) {
 
 }
 
+async function extractFrame(videofile, frameno) {
+    console.log('extractFrame', videofile, frameno)
+    let command = `ffmpeg -i ${videofile} -vf "select=eq(n\\,${frameno})" -vframes 1 ${frameno}.png`
+
+      try {
+        const { stdout, stderr } = await exec(command);
+        // console.log('stdout:', stdout);
+        // console.log('stderr:', stderr);
+      } catch (e) {
+        console.error(e); 
+      }
+
+    console.log('...done');
+}
+
 async function getVideoInfo(videofile) {
     console.log('getVideoInfo',videofile);
 
@@ -102,6 +124,10 @@ async function createVideoWallImage(videoid, account) {
     console.log('derived framerate:', framerate);
 
     let frames = getNineFrameNumbers(nframes, account);
+
+    await extractFrame('./overlay.mp4', 3708);
+
+
     // await extractFrames(username,frames);
     // let imagefile = await compositeFrames(username)
     // return imagefile;
