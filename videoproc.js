@@ -14,17 +14,11 @@ const BigNumber = require('bignumber.js');
 
 const NUM_CAPTURE_FRAMES = 9;
 
-async function download(videoid, username) {
+async function download(videoid, filepath) {
     console.log('download',videoid);
     let videourl = 'https://www.youtube.com/watch?v=' + videoid
-    // let filepath = './assets/' + username + '.mp4';
-    // let filepath = 'v-' + username + '.mp4';
-    let filepath = 'video.mp4';
     console.log('videourl',videourl);
     console.log('filepath',filepath);
-    // ytdl(videourl)
-    // .pipe(fs.createWriteStream(filepath));
-    // console.log('done');
     let length = 0;
 
     // ytdl(videourl)
@@ -35,8 +29,6 @@ async function download(videoid, username) {
     //     // rl.close();
     //     // process.exit();
     // });
-
-
 
     const prom = new Promise(function (resolve) {
         let video = ytdl(videourl, { filter: format => format.container === 'mp4' });
@@ -71,9 +63,9 @@ async function download(videoid, username) {
 
 }
 
-async function extractFrame(videofile, frameno) {
+async function extractFrame(videofile, username, frameno, index) {
     console.log('extractFrame', videofile, frameno)
-    let command = `ffmpeg -i ${videofile} -vf "select=eq(n\\,${frameno})" -vframes 1 ${frameno}.png`
+    let command = `ffmpeg -i ${videofile} -vf "select=eq(n\\,${frameno})" -vframes 1 ./assets/${username}-${index}.png`
 
       try {
         const { stdout, stderr } = await exec(command);
@@ -98,7 +90,7 @@ async function getVideoInfo(videofile) {
     return { nframes, duration };
 }
 
-function getNineFrameNumbers(nframes, account) {
+function getFrameNumbers(nframes, account) {
     let frames = new Array();
     console.log('account:', account);
     for (let i = 0; i < NUM_CAPTURE_FRAMES; i++) {
@@ -115,20 +107,22 @@ function getNineFrameNumbers(nframes, account) {
 
 async function createVideoWallImage(videoid, account) {
     const username = account.substring(0,10);
-    console.log('createVideoWallImage:',videoid, username);
-    // await download(videoid, username);
-    const { nframes, duration } = await getVideoInfo('./video.mp4');
+    const videofile = `./assets/${username}.mp4`;
+    console.log('createVideoWallImage:',videoid, videofile);
+    // await download(videoid, filepath);
+    const { nframes, duration } = await getVideoInfo(videofile);
     console.log('nframes:', nframes);
     console.log('duration:', duration);
     let framerate = nframes / duration;
     console.log('derived framerate:', framerate);
 
-    let frames = getNineFrameNumbers(nframes, account);
+    let frames = getFrameNumbers(nframes, account);
 
-    await extractFrame('./overlay.mp4', 3708);
+    for (let i = 0; i < NUM_CAPTURE_FRAMES; i++) {
+        await extractFrame(videofile,username,frames[i], i);
+    }
 
 
-    // await extractFrames(username,frames);
     // let imagefile = await compositeFrames(username)
     // return imagefile;
 
