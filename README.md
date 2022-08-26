@@ -6,7 +6,7 @@ This node app demonstrates the minting of NFTs on the Polygon test network, Mumb
 
 Given a YouTube video url, e.g. the James Bond trailer for No Time To Die, https://www.youtube.com/watch?v=BIhNsAtPbPI, the app extracts nine frames from the video. The frames chosen are deterministically based on the account number.  
 
-Starting with the most significant byte in the account number for each image, I use the first three bytes to determine the position of the first frame.  The 24-bit number gets normalized to 0..1, and then the frame number is derived based on that value and the total number of frames. We shift to the right by 2 bytes for the next frame and repeat the process.  All nine frames are shown here, using the account below and a video duration of 3720 frames.
+Starting with the most significant byte in the account number for each image, I use the first three bytes to determine the position of the first frame.  The 24-bit number gets normalized to 0..1, and then the frame number is derived based on that value and the total number of frames. We shift to the right by 2 bytes for the next frame and repeat the process.  As an example, nine frame number are shown here, using the account number below and a video duration of 3720 frames.
 ```
 nframes: 3720
 duration: 155.155000
@@ -22,7 +22,7 @@ section 209f85 maps to frame 474, part 0.12743407487869263 of 3720 frames
 section 8523d7 maps to frame 1934, part 0.5200781226158142 of 3720 frames
 section d7d730 maps to frame 3136, part 0.8431272506713867 of 3720 frames
 ```
-Note: normalizing is performed by dividing by 2^^24 and not (2^^24 - 1).  This ensures that the value 1.0 never comes up, and thusly, 3719 would be the highest frame number.
+Note: normalizing is performed by dividing by 2^^24 and not (2^^24 - 1).  This ensures that the value 1.0 never comes up, and in this example, the frame numbers run from 0 to 3719.
 
 The individual frames are then composited into one image, arranged in a grid, 3x3.  That image gets saved as a jpeg, and uploaded to the IPFS via the Pinata SDK.  A url is generated and attached to the metadata for the mint call.
 
