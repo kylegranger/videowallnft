@@ -75,9 +75,9 @@ const main = async () => {
     await pinata.testAuthentication();
 
     const account = process.argv[2];
-    const videourl = process.argv[3];
+    const videoid = process.argv[3];
 
-    await createVideoWallImage(videourl, account);
+    await createVideoWallImage(videoid, account);
 
     // await mint('QmTZhynH3hFEjb6irvLRudXaYXAo87mDPDeh6sMGnzLKfy',account);
 
