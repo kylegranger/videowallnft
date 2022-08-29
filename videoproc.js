@@ -8,6 +8,19 @@ const BigNumber = require('bignumber.js');
 
 const NUM_CAPTURE_FRAMES = 9;
 
+
+async function doCommand(command) {
+    console.log('doCommand',command)
+    try {
+        const { stdout, stderr } = await exec(command);
+            // console.log('stdout:', stdout);
+            // console.log('stderr:', stderr);
+        } catch (e) {
+        console.error(e);
+    }
+}
+
+
 async function download(videoid, filepath) {
     console.log('download',videoid);
     let videourl = 'https://www.youtube.com/watch?v=' + videoid
@@ -50,13 +63,7 @@ async function download(videoid, filepath) {
 async function extractFrame(videofile, username, frameno, index) {
     console.log('extractFrame', videofile, frameno)
     let command = `ffmpeg -i ${videofile} -vf "select=eq(n\\,${frameno})" -vframes 1 ./assets/${username}-${index}.png`
-    try {
-        const { stdout, stderr } = await exec(command);
-            // console.log('stdout:', stdout);
-            // console.log('stderr:', stderr);
-        } catch (e) {
-        console.error(e); 
-    }
+    await doCommand(command)
 }
 
 async function getVideoInfo(videofile) {
@@ -86,8 +93,19 @@ function getFrameNumbers(nframes, account) {
     return frames;
 }
 
-async function createVideoWallImage(videoid, account) {
-    const username = account.substring(0,10);
+async function compositeFrames(username) {
+    const c1 = `convert assets/${username}-0.png  assets/${username}-1.png  assets/${username}-2.png +append assets/${username}-a.png`;
+    const c2 = `convert assets/${username}-3.png  assets/${username}-4.png  assets/${username}-5.png +append assets/${username}-b.png`;
+    const c3 = `convert assets/${username}-6.png  assets/${username}-7.png  assets/${username}-8.png +append assets/${username}-c.png`;
+    const c4 = `convert assets/${username}-a.png  assets/${username}-b.png  assets/${username}-c.png -append assets/${username}.jpeg`;
+    await doCommand(c1);
+    await doCommand(c2);
+    await doCommand(c3);
+    await doCommand(c4);
+    return `assets/${username}.jpeg`;
+}
+
+async function createVideoWallImage(videoid, account, username) {
     const videofile = `./assets/${username}.mp4`;
     console.log('createVideoWallImage:',videoid, videofile);
     await download(videoid, videofile);
@@ -102,7 +120,7 @@ async function createVideoWallImage(videoid, account) {
     for (let i = 0; i < NUM_CAPTURE_FRAMES; i++) {
         await extractFrame(videofile,username,frames[i], i);
     }
-    // let imagefile = await compositeFrames(username)
-    // return imagefile;
+    let imagefile = await compositeFrames(username)
+    return imagefile;
 }
-module.exports = createVideoWallImage;
+module.exports = { createVideoWallImage, doCommand };

@@ -34,10 +34,10 @@ npm i
 ```
 
 
-At the moment, there is no web front end, so the account and video ID are passed in as command line arguments.  The YouTube video ID is the 11-char string that follows `https://www.youtube.com/watch?v=` in the url. 
+At the moment, there is no web front end, so the account, video ID, and description are passed in as command line arguments.  The YouTube video ID is the 11-char string that follows `https://www.youtube.com/watch?v=` in the url. 
 
 ```
-node videowall 0x6DAf5c3818fA712A116647D2209F8523D7D730D1 BIhNsAtPbPI
+node videowall 0x6DAf5c3818fA712A116647D2209F8523D7D730D1 BIhNsAtPbPI 'My James Bond Trailer NFT'
 ```
 
 
