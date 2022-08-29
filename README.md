@@ -1,7 +1,5 @@
 # Video Wall NFT
 
--- WORK IN PROGRESS --
-
 This node app demonstrates the minting of NFTs on the Polygon test network, Mumbai.
 
 Given a YouTube video url, e.g. the James Bond trailer for No Time To Die, https://www.youtube.com/watch?v=BIhNsAtPbPI, the app extracts nine frames from the video. The frames chosen are deterministically based on the account number.  
@@ -33,6 +31,7 @@ If not done already, install the npm libraries
 npm i
 ```
 
+You will also need to have installed two command line utilities:  ffmpeg and imagemagick (for the convert call).
 
 At the moment, there is no web front end, so the account, video ID, and description are passed in as command line arguments.  The YouTube video ID is the 11-char string that follows `https://www.youtube.com/watch?v=` in the url. 
 
